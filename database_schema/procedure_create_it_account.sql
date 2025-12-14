@@ -14,7 +14,7 @@ BEGIN
     START TRANSACTION;
     
     INSERT INTO schedule_management.`user` (email, first_name, last_name, `role`, password_hash)
-    VALUES (p_email, p_first_name, p_last_name, 'teacher', p_password_hash);
+    VALUES (p_email, p_first_name, p_last_name, 'itstaff', p_password_hash);
     
     SET @new_user_id = LAST_INSERT_ID();
     
