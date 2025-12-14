@@ -1,0 +1,265 @@
+/* This is where PS3 XMB-inspired animation css here */
+
+.xmb-particles{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.xmb-particle{
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(56, 178, 172, 0.8);
+    animation: floatParticle 15s linear infinite;
+}
+
+.xmb-particle:nth-child(2n){
+    background: rgba(56, 178, 172, 0.9);
+    box-shadow: 0 0 8px rgba(56, 178, 172, 0.6);
+    animation-duration: 18s;
+    width: 2px;
+    height: 2px;
+}
+
+.xmb-particle:nth-child(3n){
+    background: rgba(72, 187, 120, 0.7);
+    box-shadow: 0 0 4px rgba(72, 187, 120, 0.8);
+    animation-duration: 22s;
+    width: 1.5px;
+    height: 1.5px;
+}
+
+@keyframes floatParticle{
+    0%{
+        transform: translateY(100vh) translateX(0) scale(0);
+        opacity: 0;
+    }
+    5%{
+        opacity: 1;
+        transform: translateY(95vh) translateX(5px) scale(1);
+    }
+    95%{
+        opacity: 1;
+        transform: translateY(5vh) translateX(-5px) scale(1);
+    }
+    100%{
+        transform: translateY(-10vh) translateX(0) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Subtle PS3 XMB-style background waves */
+.xmb-waves{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40vh;
+    background: linear-gradient(
+        0deg,
+        rgba(56, 178, 172, 0.15) 0%,
+        rgba(56, 178, 172, 0.08) 30%,
+        rgba(72, 187, 120, 0.04) 60%,
+        transparent 100%
+    );
+    animation: wave 8s ease-in-out infinite;
+    z-index: 0;
+}
+
+.xmb-waves::before{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -50%;
+    width: 200%;
+    height: 60%;
+    background: 
+        linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(56, 178, 172, 0.2) 20%,
+            rgba(72, 187, 120, 0.25) 40%,
+            rgba(56, 178, 172, 0.2) 60%,
+            rgba(72, 187, 120, 0.15) 80%,
+            transparent 100%
+        );
+    animation: waveSlide 12s linear infinite;
+    border-radius: 50% 50% 0 0;
+}
+
+.xmb-waves::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -25%;
+    width: 150%;
+    height: 40%;
+    background: 
+        linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(72, 187, 120, 0.18) 25%,
+            rgba(56, 178, 172, 0.22) 50%,
+            rgba(72, 187, 120, 0.18) 75%,
+            transparent 100%
+        );
+    animation: waveSlide 15s linear infinite reverse;
+    border-radius: 60% 60% 0 0;
+}
+
+@keyframes wave{
+    0%, 100%{
+        transform: scaleY(1) scaleX(1);
+    }
+    33%{
+        transform: scaleY(1.1) scaleX(0.98);
+    }
+    66%{
+        transform: scaleY(0.9) scaleX(1.05);
+    }
+}
+
+@keyframes subtleWave{
+    0%, 100%{
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    50%{
+        transform: scale(1.02) rotate(0.5deg);
+        opacity: 0.8;
+    }
+}
+
+@keyframes waveSlide{
+    0%{
+        transform: translateX(0);
+    }
+    100%{
+        transform: translateX(25%);
+    }
+}
+
+@keyframes driftSlow{
+    0%{
+        transform: translateX(0) translateY(0);
+    }
+    50%{
+        transform: translateX(-10px) translateY(-5px);
+    }
+    100%{
+        transform: translateX(-20px) translateY(0);
+    }
+}
+
+/* card hover animations */
+.card-hover{
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-hover:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* button animations */
+.button-pulse{
+    position: relative;
+    animation: pulse 3s infinite;
+}
+
+@keyframes pulse{
+    0%{
+        box-shadow: 0 0 0 0 rgba(56, 178, 172, 0.4);
+    }
+    50%{
+        box-shadow: 0 0 0 8px rgba(56, 178, 172, 0);
+    }
+    100%{
+        box-shadow: 0 0 0 0 rgba(56, 178, 172, 0);
+    }
+}
+
+/* loading animation */
+.loading-dots{
+    display: inline-flex;
+    gap: 4px;
+}
+
+.loading-dots span{
+    width: 6px;
+    height: 6px;
+    background: #38b2ac;
+    border-radius: 50%;
+    animation: loadingDots 1.4s ease-in-out infinite both;
+}
+
+.loading-dots span:nth-child(1){ 
+    animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2){ 
+    animation-delay: -0.16s;
+}
+
+@keyframes loadingDots{
+    0%, 80%, 100%{
+        transform: scale(0.6);
+        opacity: 0.3;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* slide in animation */
+.slide-in-left{
+    animation: slideInLeft 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.slide-in-right{
+    animation: slideInRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.slide-in-up{
+    animation: slideInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes slideInLeft{
+    from{
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to{
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from{
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    from{
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
