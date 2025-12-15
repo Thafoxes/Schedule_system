@@ -2,8 +2,10 @@ import './App.css'
 import './index.css'
 import './styles/animation.css'
 import { Suspense, lazy, useEffect, useState } from 'react'
-import { Button, Input, Card as UICard, Tabs } from './components/ui'
+import { Button, Input, Card as UICard, Tabs, Toast } from './components/ui'
 import { getRoleTheme, RoleTheme, roleThemes } from './utils/RoleTheme'
+import { LoginFormData } from './utils/validationSchemas'
+import LoginForm from './components/forms/LoginForm'
 import { theme } from './styles/theme'
 
 // Works also with SSR
@@ -133,7 +135,14 @@ function App() {
   // Get current theme based on selected tab (immediate) or confirmed role
   const currentTheme = getRoleTheme(currentTab)
 
-   useEffect(() => {
+  // toast state for app-level feedback
+  const [appToast, setAppToast] = useState<{ show: boolean; message: string; type: 'success' | 'error' }>({
+    show: false,
+    message: '',
+    type: 'success'
+  })
+
+  useEffect(() => {
     // Check if we're on the client side
     if (typeof window !== 'undefined') {
       // Set initial width
@@ -151,21 +160,42 @@ function App() {
     }
   }, [])
 
-  const handleRoleSelection = (role: string) => {
-    setSelectedRole(role)
+  const handleFormSubmit = (role:string) => (data: LoginFormData) =>{
+    console.log('Form submitted: ', {role, data} )
     setLoading(role)
-    
-    // Simulate loading
+
+    setAppToast({
+        show: true,
+        message: 'Validating credentials...',
+        type: 'success'
+    })
+
+    //simulate API call
     setTimeout(() => {
       setLoading('')
-      alert(`Selected ${role} role!`)
+      const isSuccess = Math.random() > 0.3
+
+      if (isSuccess){
+        setAppToast({
+           show: true,
+           message: `Welcome! Successfully logged in as ${role}${data.rememberMe ? ' (Session will be remembered)' : ''}`,
+           type: 'success'
+        })
+      }else{
+        setAppToast({
+          show: true,
+          message: `Login failed: Invalid email or password for ${role} account`,
+          type: 'error'
+        })
+      }
     }, 2000)
   }
 
   const handleTabChange = (tabId: string) => {
-    setCurrentTab(tabId) // Update background immediately when tab changes
-    console.log(`Switched to ${tabId} tab`)
+    setCurrentTab(tabId)
+    console.log(`switched to ${tabId} tab`)
   }
+
 
   //Helper functions for responsive values
   const isMobile = windowWidth < 768
@@ -178,90 +208,36 @@ function App() {
       id: 'student',
       label: 'Student',
       content: (
-        <div>
-          <Input 
-            label="Student Email" 
-            placeholder="student@university.edu"
-            fullWidth
-            
-          />
-          <Input 
-            label="Password" 
-            type="password"
-            placeholder="Enter your password"
-            fullWidth
-          />
-          <Button 
-            variant="primary" 
-            fullWidth
-            loading={loading === 'student'}
-            onClick={() => handleRoleSelection('student')}
-            customColor={currentTheme.primary}
-          >
-            Login as Student
-          </Button>
-        </div>
+        <LoginForm 
+          role="student"
+          onSubmit={handleFormSubmit('student')}
+          loading={loading === 'student'}
+          customColor={currentTheme.primary}
+        />
       )
     },
     {
       id: 'teacher',
       label: 'Teacher',
       content: (
-        <div>
-          <Input 
-            label="Teacher Email" 
-            placeholder="teacher@university.edu"
-            fullWidth
-            
-          />
-          <Input 
-            label="Password" 
-            type="password"
-            placeholder="Enter your password"
-            fullWidth
-            
-          />
-          <Button 
-            variant="primary" 
-            fullWidth
-            loading={loading === 'teacher'}
-            onClick={() => handleRoleSelection('teacher')}
-            customColor={currentTheme.primary}
-          >
-            Login as Teacher
-          </Button>
-        </div>
+        <LoginForm 
+          role="teacher"
+          onSubmit={handleFormSubmit('teacher')}
+          loading={loading === 'teacher'}
+          customColor={currentTheme.primary}
+        />
       )
     },
     {
       id: 'admin',
       label: 'Admin',
       content: (
-        <div>
-          <Input 
-            label="Admin Email" 
-            placeholder="admin@university.edu"
-            fullWidth
-           
-          />
-          <Input 
-            label="Password" 
-            type="password"
-            placeholder="Enter admin password"
-            fullWidth
-           
-          />
-          <Button 
-            variant="primary" 
-            fullWidth
-            loading={loading === 'admin'}
-            onClick={() => handleRoleSelection('admin')}
-            customColor={currentTheme.primary}
-
-          >
-            Login as Admin
-          </Button>
-        </div>
+         <LoginForm 
+          role="admin"
+          onSubmit={handleFormSubmit('admin')}
+          loading={loading === 'admin'}
+          customColor={currentTheme.primary}
+        />
       )
     }
   ]
@@ -378,6 +354,18 @@ function App() {
 
 
       </main>
+      {/* App level toast */}
+      {
+        appToast.show && (
+          <Toast
+              message={appToast.message}
+              type={appToast.type}
+              show={appToast.show}
+              duration={5000} // Show longer for app-level messages
+              onClose={() => setAppToast(prev => ({ ...prev, show: false }))}
+          />
+        )
+      }
     </>
   )
 }

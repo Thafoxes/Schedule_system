@@ -7,6 +7,7 @@ interface ButtonProps {
   size?: 'sm' | 'md' | 'lg'
   fullWidth?: boolean
   disabled?: boolean
+  style?: React.CSSProperties
   loading?: boolean
   className?: string
   onClick?: () => void
@@ -21,6 +22,7 @@ const Button: React.FC<ButtonProps> = ({
   size = 'md',
   fullWidth = false,
   disabled = false,
+  style,
   loading = false,
   className = '',
   onClick,
@@ -99,6 +101,7 @@ const Button: React.FC<ButtonProps> = ({
     ...getVariantStyles(),
     ...getSizeStyles(),
     marginTop: '1.5rem',
+    ...style,
   }
 
   return (
