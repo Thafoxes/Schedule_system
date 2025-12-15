@@ -2,9 +2,10 @@ import './App.css'
 import './index.css'
 import './styles/animation.css'
 import { Suspense, lazy, useEffect, useState } from 'react'
+import { Button, Input, Card as UICard, Tabs } from './components/ui'
 
-// Works also with SSR as expected
-const Card = lazy(() => import('./Card'))
+// Works also with SSR as expected - rename this to avoid conflict
+const LazyCard = lazy(() => import('./Card'))
 
 // Component to create animated particles
 const AnimatedBackground = () => {
@@ -98,16 +99,8 @@ function App() {
           </p>
         </div>
 
-        {/* Test card */}
-        <div className="card-hover slide-in-up" style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          borderRadius: '20px',
-          padding: '2rem',
-          maxWidth: '400px',
-          width: '100%',
-          textAlign: 'center',
-          animationDelay: '0.4s'
-        }}>
+        {/* Test our new UI components */}
+        <UICard hover className="slide-in-up" padding="lg" shadow="xl">
           <h2 style={{ 
             color: '#2d3748', 
             marginBottom: '1rem',
@@ -123,62 +116,25 @@ function App() {
             Choose your role to get started
           </p>
 
-          {/* Test buttons */}
+          {/* Test our new Button components */}
           <div style={{
             display: 'flex',
             gap: '1rem',
             flexDirection: 'column'
           }}>
-            <button 
-              className="button-pulse"
-              style={{
-                background: '#38b2ac',
-                color: 'white',
-                border: 'none',
-                borderRadius: '12px',
-                padding: '12px 24px',
-                fontSize: '1rem',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-            >
+            <Button variant="primary" fullWidth>
               Student Login
-            </button>
+            </Button>
             
-            <button 
-              style={{
-                background: '#48bb78',
-                color: 'white',
-                border: 'none',
-                borderRadius: '12px',
-                padding: '12px 24px',
-                fontSize: '1rem',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-            >
+            <Button variant="secondary" fullWidth>
               Teacher Login
-            </button>
+            </Button>
             
-            <button 
-              style={{
-                background: '#2c7a7b',
-                color: 'white',
-                border: 'none',
-                borderRadius: '12px',
-                padding: '12px 24px',
-                fontSize: '1rem',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-            >
+            <Button variant="outline" fullWidth>
               Admin Login
-            </button>
+            </Button>
           </div>
-        </div>
+        </UICard>
 
         {/* Loading test */}
         <div style={{
@@ -207,7 +163,7 @@ function App() {
               <span></span>
             </div>
           }>
-            <Card />
+            <LazyCard />
           </Suspense>
         </div>
       </main>
