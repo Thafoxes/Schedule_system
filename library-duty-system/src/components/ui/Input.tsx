@@ -27,12 +27,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
     borderRadius: theme.radii.lg,
     fontSize: theme.fontSizes.md,
     fontFamily: theme.fonts.body,
-    background: theme.colors.white,
+    backgroundColor: theme.colors.white,
     color: theme.colors.text.primary,
     outline: 'none',
     transition: theme.transitions.normal,
     paddingLeft: startIcon ? theme.spacing[12] : theme.spacing[4],
     paddingRight: endIcon ? theme.spacing[12] : theme.spacing[4],
+    boxSizing: 'border-box', // ← Important for proper sizing
+
   }
 
   const focusStyles: React.CSSProperties = {
@@ -51,7 +53,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
     marginBottom: theme.spacing[2],
     fontSize: theme.fontSizes.sm,
     fontWeight: theme.fontWeights.medium,
-    color: theme.colors.text.secondary,
+    color: theme.colors.text.primary,
+    textAlign: 'left',
+    padding: '1px',
   }
 
   const iconStyles: React.CSSProperties = {
@@ -60,6 +64,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
     transform: 'translateY(-50%)',
     color: theme.colors.gray[400],
     pointerEvents: 'none',
+    zIndex: 1,
   }
 
   const startIconStyles: React.CSSProperties = {

@@ -11,6 +11,8 @@ interface ButtonProps {
   className?: string
   onClick?: () => void
   type?: 'button' | 'submit' | 'reset'
+  customColor?:string
+  customBorderColor?: string
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -23,33 +25,35 @@ const Button: React.FC<ButtonProps> = ({
   className = '',
   onClick,
   type = 'button',
+  customColor,
+  customBorderColor,
   ...props
 }) => {
   const getVariantStyles = () => {
     switch (variant) {
       case 'primary':
         return {
-          background: theme.colors.primary[500],
+          background: customColor || theme.colors.primary[500],
           color: theme.colors.white,
           border: 'none',
           boxShadow: '0 0 0 0 rgba(56, 178, 172, 0.5)',
         }
       case 'secondary':
         return {
-          background: theme.colors.secondary[500],
+          background:  customColor || theme.colors.secondary[500],
           color: theme.colors.white,
           border: 'none',
         }
       case 'outline':
         return {
           background: 'transparent',
-          color: theme.colors.primary[500],
+          color:  customColor || theme.colors.primary[500],
           border: `2px solid ${theme.colors.primary[500]}`,
         }
       case 'ghost':
         return {
           background: 'transparent',
-          color: theme.colors.primary[500],
+          color:  customColor || theme.colors.primary[500],
           border: 'none',
         }
       default:
@@ -94,6 +98,7 @@ const Button: React.FC<ButtonProps> = ({
     outline: 'none',
     ...getVariantStyles(),
     ...getSizeStyles(),
+    marginTop: '1.5rem',
   }
 
   return (

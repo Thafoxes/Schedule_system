@@ -12,13 +12,17 @@ interface TabsProps {
   defaultTab?: string
   onChange?: (tabId: string) => void
   className?: string
+  activeColor? : string
+  inactiveColor? : string
 }
 
 const Tabs: React.FC<TabsProps> = ({
   tabs,
   defaultTab,
   onChange,
-  className = ''
+  className = '',
+  activeColor,
+  inactiveColor
 }) => {
   const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id)
 
@@ -29,9 +33,17 @@ const Tabs: React.FC<TabsProps> = ({
 
   const tabListStyles: React.CSSProperties = {
     display: 'flex',
-    borderBottom: `2px solid ${theme.colors.gray[200]}`,
+    borderBottom: `2px solid ${theme.colors.gray[700]}`,
     marginBottom: theme.spacing[6],
     gap: theme.spacing[2],
+    borderRadius: '8px 8px 0 0', // ← Round top corners
+    padding: '1 rem', // ← Add some padding
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    scrollBehavior: 'smooth',
+    WebkitOverflowScrolling: 'touch',
+    scrollbarWidth: 'thin',
+
   }
 
   const tabButtonStyles = (isActive: boolean): React.CSSProperties => ({
@@ -40,9 +52,9 @@ const Tabs: React.FC<TabsProps> = ({
     background: 'transparent',
     fontSize: theme.fontSizes.md,
     fontWeight: theme.fontWeights.medium,
-    color: isActive ? theme.colors.primary[600] : theme.colors.text.secondary,
+    color: isActive ? theme.colors.text.primary : theme.colors.gray[400],
     cursor: 'pointer',
-    borderBottom: isActive ? `3px solid ${theme.colors.primary[500]}` : '3px solid transparent',
+    borderBottom: isActive ? `5px solid ${activeColor}` : '5px solid transparent',
     transition: theme.transitions.normal,
     borderRadius: `${theme.radii.md} ${theme.radii.md} 0 0`,
     fontFamily: theme.fonts.body,
@@ -50,6 +62,9 @@ const Tabs: React.FC<TabsProps> = ({
 
   const tabContentStyles: React.CSSProperties = {
     animation: 'slideInUp 0.3s ease-out',
+    paddingRight: '2em', 
+    paddingBottom: '2em',
+    paddingLeft: '2em',
   }
 
   const currentTab = tabs.find(tab => tab.id === activeTab)

@@ -1,5 +1,51 @@
 /* This is where PS3 XMB-inspired animation css here */
 
+/* movile devices (up to 768px) */
+@media (max-width: 768px) {
+    .animated-background {
+        /* Reduce particle density on mobile */
+        overflow: hidden;
+    }
+
+    .xmb-particle{
+        width: 3px !important;
+        height: 3px !important;
+        animation-duration: 15s;
+    }
+
+    .xmb-waves{
+        opacity: 0.3;
+        animation-duration: 20s;
+    }
+}
+
+/* tablet devices (768px to 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .xmb-particle{
+        width: 4px;
+        height: 4px;
+        animation-duration: 12s;
+    }
+
+     .xmb-waves {
+        opacity: 0.5;
+    }
+    
+}
+
+/* Large screens (1024px and above) */
+@media (min-width: 1024px) {
+  .xmb-particle {
+    width: 6px;
+    height: 6px;
+    animation-duration: 8s;
+  }
+  
+  .xmb-waves {
+    opacity: 0.7;
+  }
+}
+
 .xmb-particles{
     position: absolute;
     width: 100%;
