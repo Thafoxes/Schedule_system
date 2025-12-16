@@ -2,3 +2,9 @@
 *.env.local
 .gemini
 /backend/node_modules
+.idea/workspace.xml~
+frontend/library-duty-system/node_modules/.cache/default-development/0.pack
+frontend/library-duty-system/node_modules/.cache/default-development/0.pack
+frontend/library-duty-system/node_modules/.cache/default-development/1.pack
+frontend/library-duty-system/node_modules/.cache/default-development/index.pack
+frontend/library-duty-system/node_modules/.cache/default-development/index.pack.old
