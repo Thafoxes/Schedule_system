@@ -109,11 +109,9 @@ if (distance < 100) {
 - [ ] Duty assignment CRUD operations
 - [ ] Schedule management calendar
 - [ ] Email notifications
-- [ ] Dark/Light mode toggle
 
-## 📄 License
 
-This project is licensed under the MIT License.
+
 
 ---
 
