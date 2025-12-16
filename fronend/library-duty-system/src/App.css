@@ -1,0 +1,627 @@
+.app {
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.8s ease;
+  padding: 15px;
+  gap: 15px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.wave-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Sparkle particles like PSP */
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+  animation: sparkle linear infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.silk-waves {
+  position: absolute;
+  width: 140%;
+  height: 250px;
+  top: 55%;
+  left: -20%;
+  overflow: visible;
+  z-index: 0;
+  transform: rotate(-8deg);
+}
+
+.wave-curves {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  left: 0;
+}
+
+.wave-line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wave-1 {
+  animation: wave-flow-1 10s ease-in-out infinite;
+}
+
+.wave-2 {
+  animation: wave-flow-2 12s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+.wave-3 {
+  animation: wave-flow-3 11s ease-in-out infinite;
+  animation-delay: -6s;
+}
+
+.wave-4 {
+  animation: wave-flow-4 13s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+.wave-5 {
+  animation: wave-flow-5 9s ease-in-out infinite;
+  animation-delay: -7s;
+}
+
+.wave-6 {
+  animation: wave-flow-6 12s ease-in-out infinite;
+  animation-delay: -5s;
+}
+
+.wave-7 {
+  animation: wave-flow-7 11s ease-in-out infinite;
+  animation-delay: -8s;
+}
+
+.wave-8 {
+  animation: wave-flow-3 10s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+.wave-9 {
+  animation: wave-flow-4 12s ease-in-out infinite;
+  animation-delay: -9s;
+}
+
+.wave-10 {
+  animation: wave-flow-5 11s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+.wave-11 {
+  animation: wave-flow-6 13s ease-in-out infinite;
+  animation-delay: -6s;
+}
+
+.wave-12 {
+  animation: wave-flow-1 10s ease-in-out infinite;
+  animation-delay: -10s;
+}
+
+.wave-13 {
+  animation: wave-flow-2 12s ease-in-out infinite;
+  animation-delay: -1s;
+}
+
+/* Enhanced Jellyfish effect - dramatic pulsating, breathing, flowing motion */
+@keyframes wave-flow-1 {
+  0%, 100% {
+    transform: translateX(0) translateY(0) scaleY(1) rotate(0deg);
+    opacity: 0.8;
+  }
+  25% {
+    transform: translateX(25px) translateY(-15px) scaleY(1.4) rotate(1deg);
+    opacity: 0.95;
+  }
+  50% {
+    transform: translateX(15px) translateY(8px) scaleY(0.75) rotate(0deg);
+    opacity: 0.65;
+  }
+  75% {
+    transform: translateX(5px) translateY(-5px) scaleY(1.15) rotate(-0.5deg);
+    opacity: 0.85;
+  }
+}
+
+@keyframes wave-flow-2 {
+  0%, 100% {
+    transform: translateX(0) translateY(0) scaleY(1) rotate(0deg);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateX(-30px) translateY(10px) scaleY(0.7) rotate(-1deg);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateX(-20px) translateY(-18px) scaleY(1.5) rotate(0deg);
+    opacity: 0.9;
+  }
+  75% {
+    transform: translateX(-10px) translateY(5px) scaleY(1) rotate(0.5deg);
+    opacity: 0.75;
+  }
+}
+
+@keyframes wave-flow-3 {
+  0%, 100% {
+    transform: translateX(0) translateY(0) scaleY(1) rotate(0deg);
+    opacity: 0.85;
+  }
+  25% {
+    transform: translateX(20px) translateY(-20px) scaleY(1.6) rotate(1.5deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(12px) translateY(6px) scaleY(0.8) rotate(0deg);
+    opacity: 0.7;
+  }
+  75% {
+    transform: translateX(6px) translateY(-8px) scaleY(1.25) rotate(-1deg);
+    opacity: 0.9;
+  }
+}
+
+@keyframes wave-flow-4 {
+  0%, 100% {
+    transform: translateX(0) translateY(0) scaleY(1) rotate(0deg);
+    opacity: 0.65;
+  }
+  25% {
+    transform: translateX(-35px) translateY(12px) scaleY(0.8) rotate(-1.5deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(-22px) translateY(-10px) scaleY(1.45) rotate(0deg);
+    opacity: 0.85;
+  }
+  75% {
+    transform: translateX(-12px) translateY(4px) scaleY(1.1) rotate(0.8deg);
+    opacity: 0.7;
+  }
+}
+
+@keyframes wave-flow-5 {
+  0%, 100% {
+    transform: translateX(0) translateY(0) scaleY(1) rotate(0deg);
+    opacity: 0.75;
+  }
+  25% {
+    transform: translateX(32px) translateY(-22px) scaleY(1.55) rotate(2deg);
+    opacity: 0.95;
+  }
+  50% {
+    transform: translateX(18px) translateY(10px) scaleY(0.72) rotate(0deg);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translateX(8px) translateY(-6px) scaleY(1.2) rotate(-1.2deg);
+    opacity: 0.82;
+  }
+}
+
+@keyframes wave-flow-6 {
+  0%, 100% {
+    transform: translateX(0) translateY(0) scaleY(1) rotate(0deg);
+    opacity: 0.68;
+  }
+  25% {
+    transform: translateX(-28px) translateY(15px) scaleY(0.78) rotate(-1.8deg);
+    opacity: 0.52;
+  }
+  50% {
+    transform: translateX(-16px) translateY(-12px) scaleY(1.48) rotate(0deg);
+    opacity: 0.88;
+  }
+  75% {
+    transform: translateX(-8px) translateY(6px) scaleY(1.05) rotate(1deg);
+    opacity: 0.72;
+  }
+}
+
+@keyframes wave-flow-7 {
+  0%, 100% {
+    transform: translateX(0) translateY(0) scaleY(1) rotate(0deg);
+    opacity: 0.82;
+  }
+  25% {
+    transform: translateX(18px) translateY(-18px) scaleY(1.5) rotate(1.3deg);
+    opacity: 0.98;
+  }
+  50% {
+    transform: translateX(10px) translateY(8px) scaleY(0.76) rotate(0deg);
+    opacity: 0.68;
+  }
+  75% {
+    transform: translateX(4px) translateY(-7px) scaleY(1.18) rotate(-0.8deg);
+    opacity: 0.88;
+  }
+}
+
+.main-title {
+  color: white;
+  text-align: center;
+  margin: 0;
+  padding: 10px;
+  animation: fadeInDown 0.8s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.title-icon {
+  font-size: 45px;
+  filter: drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.4));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.title-text-large {
+  font-size: 38px;
+  font-weight: 900;
+  text-shadow: 3px 5px 10px rgba(0, 0, 0, 0.4);
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.title-text-small {
+  font-size: 22px;
+  font-weight: 600;
+  text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+  opacity: 0.95;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-container {
+  width: 100%;
+  max-width: min(450px, 90vw);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.login-box {
+  background: white;
+  border-radius: 20px;
+  padding: 20px 25px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.role-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: space-between;
+}
+
+.role-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.role-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.role-btn.active {
+  transform: scale(1.05);
+}
+
+.form-container {
+  margin-top: 10px;
+}
+
+.form-title {
+  text-align: center;
+  color: #555;
+  font-size: 18px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.form-subtitle {
+  text-align: center;
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  display: block;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+}
+
+/* Default focus */
+.form-group input:focus {
+  border-color: #4A90E2;
+}
+
+/* Role-specific input focus colors */
+.student-theme .form-group input:focus {
+  border-color: #2d5a3d;
+  box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.15);
+}
+
+.teacher-theme .form-group input:focus {
+  border-color: #8B2942;
+  box-shadow: 0 0 0 3px rgba(139, 41, 66, 0.15);
+}
+
+.admin-theme .form-group input:focus {
+  border-color: #1a5a5e;
+  box-shadow: 0 0 0 3px rgba(26, 90, 94, 0.15);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 3px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.forgot-password {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.forgot-password-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.forgot-password-btn:hover {
+  color: #4A90E2;
+  text-decoration: underline;
+}
+
+.toggle-form {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.toggle-form p {
+  color: #666;
+  font-size: 14px;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #4A90E2;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 5px;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.toggle-btn:hover {
+  color: #357ABD;
+}
+
+/* Responsive Design - Small screens */
+@media (max-width: 600px) {
+  .title-icon {
+    font-size: 40px;
+  }
+
+  .title-text-large {
+    font-size: 32px;
+  }
+
+  .title-text-small {
+    font-size: 18px;
+  }
+
+  .main-title {
+    padding: 15px;
+    gap: 5px;
+  }
+
+  .login-box {
+    padding: 30px 20px;
+  }
+
+  .role-btn {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+
+  .form-title {
+    font-size: 20px;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+  .app {
+    gap: 20px;
+  }
+
+  .title-icon {
+    font-size: 55px;
+  }
+
+  .title-text-large {
+    font-size: 48px;
+  }
+
+  .title-text-small {
+    font-size: 28px;
+  }
+
+  .login-container {
+    max-width: 500px;
+  }
+
+  .login-box {
+    padding: 30px 35px;
+  }
+
+  .form-group input {
+    padding: 12px 14px;
+    font-size: 16px;
+  }
+
+  .submit-btn {
+    padding: 14px;
+    font-size: 18px;
+  }
+
+  .role-btn {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+}
+
+/* Extra large screens (4K, etc) */
+@media (min-width: 1800px) {
+  .app {
+    gap: 25px;
+  }
+
+  .title-icon {
+    font-size: 65px;
+  }
+
+  .title-text-large {
+    font-size: 56px;
+  }
+
+  .title-text-small {
+    font-size: 32px;
+  }
+
+  .login-container {
+    max-width: 550px;
+  }
+
+  .login-box {
+    padding: 35px 40px;
+    border-radius: 25px;
+  }
+}
+
