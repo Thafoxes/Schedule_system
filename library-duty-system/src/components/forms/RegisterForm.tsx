@@ -36,6 +36,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             password: '',
             confirmPassword: '',
             studentId: '',
+            termsAccepted: false,
         }
     })
 
@@ -169,6 +170,58 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                     <i className="bi bi-person-plus" style={{ marginRight: '0.5rem' }} />
                     Create {role.charAt(0).toUpperCase() + role.slice(1)} Account
                 </Button>
+
+                {/* Terms and Conditions Checkbox */}
+                <div style={{textAlign: 'center'}}>
+                    <label style={{
+                        display: 'inline-flex',
+                        alignItems: 'flex-start',
+                        gap: theme.spacing[2],
+                        marginBottom: theme.spacing[4],
+                        fontSize: theme.fontSizes.sm,
+                        color: theme.colors.text.secondary,
+                        cursor: 'pointer',
+                        
+                    }}>
+                        <input
+                            {...register('termsAccepted')}
+                            type="checkbox"
+                            style={{
+                                width: '18px',
+                                height: '18px',
+                                accentColor: customColor || theme.colors.primary[500],
+                                cursor: 'pointer',
+                                marginTop: '2px', // Align with text
+                                flexShrink: 0, // Prevent checkbox from shrinking
+                            }}
+                        />
+                        <span style={{ lineHeight: '1.4' }}>
+                            I agree to the{' '}
+                            <a
+                                href="#terms"
+                                onClick={(e) => e.preventDefault()}
+                                style={{
+                                    color: customColor || theme.colors.primary[500],
+                                    textDecoration: 'underline',
+                                    fontWeight: theme.fontWeights.medium,
+                                }}
+                            >
+                                Not Being a Naughty User Agreement
+                            </a>
+                        </span>
+                    </label>
+                    {/* terms and conditions tick */}
+                    {errors.termsAccepted && (
+                        <div style={{
+                            marginTop: '-' + theme.spacing[3],
+                            marginBottom: theme.spacing[4],
+                            fontSize: theme.fontSizes.sm,
+                            color: theme.colors.status.error,
+                        }}>
+                            {errors.termsAccepted.message}
+                        </div>
+                    )}
+                </div>
 
                 {/* Back to Login Link */}
                 <div style={{ textAlign: 'center' }}>
