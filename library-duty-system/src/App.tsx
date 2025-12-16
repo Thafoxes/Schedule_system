@@ -7,6 +7,7 @@ import { getRoleTheme, RoleTheme, roleThemes } from './utils/RoleTheme'
 import { LoginFormData } from './utils/validationSchemas'
 import LoginForm from './components/forms/LoginForm'
 import { theme } from './styles/theme'
+import RegisterForm from './components/forms/RegisterForm'
 
 // Works also with SSR
 const LazyCard = lazy(() => import('./Card'))
@@ -131,6 +132,7 @@ function App() {
   const [currentTab, setCurrentTab] = useState<string>('student') // Track current tab
   const [loading, setLoading] = useState<string>('')
   const [windowWidth, setWindowWidth] = useState<number>(1200)
+  const [isLoginMode, setIsLoginMode] = useState<boolean>(true)
 
   // Get current theme based on selected tab (immediate) or confirmed role
   const currentTheme = getRoleTheme(currentTab)
@@ -160,13 +162,13 @@ function App() {
     }
   }, [])
 
-  const handleFormSubmit = (role:string) => (data: LoginFormData) =>{
+  const handleFormSubmit = (role:string) => (data: any) =>{
     console.log('Form submitted: ', {role, data} )
     setLoading(role)
 
     setAppToast({
         show: true,
-        message: 'Validating credentials...',
+        message: isLoginMode? 'Validating credentials...': 'Creating new account...',
         type: 'success'
     })
 
@@ -176,19 +178,39 @@ function App() {
       const isSuccess = Math.random() > 0.3
 
       if (isSuccess){
-        setAppToast({
-           show: true,
-           message: `Welcome! Successfully logged in as ${role}${data.rememberMe ? ' (Session will be remembered)' : ''}`,
-           type: 'success'
-        })
+        if (isLoginMode) {
+                setAppToast({
+                    show: true,
+                    message: `Welcome! Successfully logged in as ${role}${data.rememberMe ? ' (Session will be remembered)' : ''}`,
+                    type: 'success'
+                })
+            } else {
+                setAppToast({
+                    show: true,
+                    message: `Account created successfully! Welcome ${data.firstName} ${data.lastName}`,
+                    type: 'success'
+                })
+                // Auto-switch to login after successful registration
+                setTimeout(() => {
+                    setIsLoginMode(true)
+                }, 2000)
+            }
       }else{
         setAppToast({
           show: true,
-          message: `Login failed: Invalid email or password for ${role} account`,
+          message: isLoginMode 
+                    ? `Login failed: Invalid email or password for ${role} account`
+                    : `Registration failed: Email already exists or invalid data`,
           type: 'error'
         })
       }
     }, 2000)
+  }
+
+  const handleToggleMode = () =>{
+    setIsLoginMode(!isLoginMode)
+    setLoading('') //clear any loading states
+    setAppToast(prev => ({ ...prev, show:false}))
   }
 
   const handleTabChange = (tabId: string) => {
@@ -207,10 +229,19 @@ function App() {
     {
       id: 'student',
       label: 'Student',
-      content: (
+      content: isLoginMode ? (
         <LoginForm 
           role="student"
           onSubmit={handleFormSubmit('student')}
+          loading={loading === 'student'}
+          customColor={currentTheme.primary}
+          onSwitchToRegister={handleToggleMode}
+        />
+      ): (
+        <RegisterForm
+          role="student"
+          onSubmit={handleFormSubmit('student')}
+          onBackToLogin={handleToggleMode}
           loading={loading === 'student'}
           customColor={currentTheme.primary}
         />
@@ -219,10 +250,20 @@ function App() {
     {
       id: 'teacher',
       label: 'Teacher',
-      content: (
+      content: isLoginMode ? (
         <LoginForm 
           role="teacher"
           onSubmit={handleFormSubmit('teacher')}
+          loading={loading === 'teacher'}
+          customColor={currentTheme.primary}
+          onSwitchToRegister={handleToggleMode}
+
+        />
+      ):  (
+        <RegisterForm
+          role="teacher"
+          onSubmit={handleFormSubmit('teacher')}
+          onBackToLogin={handleToggleMode}
           loading={loading === 'teacher'}
           customColor={currentTheme.primary}
         />
@@ -320,7 +361,7 @@ function App() {
           </div>
         </div>
 
-        {/* Enhanced Login Card with Tabs */}
+        {/* Enhanced Login/register Card with Tabs */}
         <UICard hover className="slide-in-up" padding="lg" shadow="xl" 
         style={{ 
           maxWidth: '500px', 
@@ -340,7 +381,7 @@ function App() {
             textAlign: 'center',
             
           }}>
-            Login to the System
+            {isLoginMode? 'Login to the System': 'Register for the system'}
           </h2>
           
           <Tabs 

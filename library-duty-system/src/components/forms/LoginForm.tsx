@@ -10,13 +10,15 @@ interface LoginFormProps{
     onSubmit: (data: LoginFormData) => void
     loading? : boolean
     customColor? :string
+    onSwitchToRegister?: () => void
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
     role,
     onSubmit,
     loading = false,
-    customColor
+    customColor,
+    onSwitchToRegister
 }) => {
 
     const [toast, setToast] = useState<{ show: boolean; message: string; type: 'success' | 'error' }>({
@@ -154,17 +156,41 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 Forgot your password?
                 </a>
 
-                <div style={{ fontSize: theme.fontSizes.sm, color: theme.colors.text.light }}>
-                New to the system?{' '}
-                <a
-                    href="#register"
-                    style={linkStyles}
-                    onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.8' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
-                >
-                    Register here
-                </a>
-                </div>
+                
+
+                {/* Show admin-specific message */}
+                {role === 'admin' && (
+                    <div style={{ 
+                        fontSize: theme.fontSizes.sm, 
+                        color: theme.colors.text.light,
+                        textAlign: 'center',
+                        fontStyle: 'italic'
+                    }}>
+                        <i className="bi bi-shield-lock" style={{ marginRight: '0.25rem' }} />
+                        Admin accounts are created by system administrators only.
+                        In production mode it will be hidden and disabled.
+                    </div>
+                )}
+
+                {/* admin are not allow to register */}
+                {(
+                    <div style={{ fontSize: theme.fontSizes.sm, color: theme.colors.text.light }}>
+                        New to the system?{' '}
+                        <a
+                            href="#register"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                onSwitchToRegister?.() //call the toggle function
+                            }}
+                            style={linkStyles}
+                            onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.8' }}
+                            onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
+                        >
+                            Register here
+                        </a>
+                    </div>
+                )}
+               
             </div>
          </form>
         {
