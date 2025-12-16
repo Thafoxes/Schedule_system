@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { testConnection, executeStoredProcedure, executeQuery, closePool } = require('./src/config/database');
 require('dotenv').config();
 
 const app = express();
@@ -67,9 +68,59 @@ app.get('/api/health', (req, res) => {
 
 // Test database endpoint (we'll add this after database setup)
 app.get('/api/test-db', async (req, res) => {
-    res.json({
-        message: 'Database endpoint ready - will test connection after DB setup'
-    });
+    try{
+        const isConnected = await testConnection();
+
+        if (isConnected){
+             // Test a simple query to get user count
+            const users = await executeQuery('SELECT COUNT(*) as user_count FROM schedule_management.user');
+            
+            res.json({
+                success: true,
+                message: 'Database connection successful',
+                database: process.env.DB_NAME,
+                userCount: users[0].user_count,
+                timestamp: new Date().toISOString()
+            });
+        }else{
+            res.status(500).json({
+                error: true,
+                message: 'Database connection failed'
+            });
+        }
+    }catch (error){
+        console.error('Database test error:', error);
+        res.status(500).json({
+            error: true,
+            message: 'Database test failed',
+            details: process.env.NODE_ENV === 'development' ? error.message : 'Internal error'
+        });
+    }
+});
+
+
+// Test stored procedure endpoint
+app.get('/api/test-procedures', async (req, res) => {
+    try {
+        // Test viewing student accounts (this should be safe to test)
+        const students = await executeStoredProcedure('p_view_student_acc');
+        
+        res.json({
+            success: true,
+            message: 'Stored procedure test successful',
+            procedureTested: 'p_view_student_acc',
+            studentCount: students.length,
+            sampleData: students.slice(0, 2), // Return first 2 records as sample
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Stored procedure test error:', error);
+        res.status(500).json({
+            error: true,
+            message: 'Stored procedure test failed',
+            details: process.env.NODE_ENV === 'development' ? error.message : 'Internal error'
+        });
+    }
 });
 
 // Global error handling middleware
@@ -92,7 +143,8 @@ app.use( (req, res) => {
         message: `Route ${req.method} ${req.originalUrl} not found`,
         availableRoutes: [
             'GET /api/health',
-            'GET /api/test-db'
+            'GET /api/test-db',
+            'GET /api/test-procedures'
         ]
     });
 });
