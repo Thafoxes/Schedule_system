@@ -3,7 +3,7 @@
 A React-based web application for managing library duty assignments with a unified login portal featuring a stunning PSP XMB-inspired theme.
 
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
-![License](https://img.shields.io/badge/License-MIT-green)
+
 
 ## ✨ Features
 
