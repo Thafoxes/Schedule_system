@@ -266,3 +266,7 @@ const WaveBackground = () => {
 };
 
 export default WaveBackground;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes

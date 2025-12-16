@@ -118,3 +118,7 @@ This project is licensed under the MIT License.
 ---
 
 <p align="center">Made with ❤️ for library management</p>
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
