@@ -33,10 +33,11 @@ api.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
+      // Token expired or invalid - clear stored data but don't redirect
+      // Let the component handle the error display
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
-      window.location.href = '/';
+      console.log('401 error: cleared auth data, letting component handle error display');
     }
     return Promise.reject(error);
   }
