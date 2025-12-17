@@ -1,21 +1,49 @@
 import { useEffect, useRef } from 'react';
 
-const WaveBackground = () => {
-  const canvasRef = useRef(null);
-  const animationRef = useRef(null);
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  size: number;
+  life: number;
+  opacity: number;
+  reset(): void;
+  update(): void;
+  draw(ctx: CanvasRenderingContext2D): void;
+}
+
+interface WaveRibbon {
+  baseYRatio: number;
+  amplitude: number;
+  speed: number;
+  opacity: number;
+  slopeBase: number;
+  thickness: number;
+  offset: number;
+  secondaryOffset: number;
+  update(): void;
+  draw(ctx: CanvasRenderingContext2D, width: number, height: number): void;
+}
+
+
+const WaveBackground: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
     const extraWidth = 100;
 
     // Store dimensions in refs that can be updated
     let width = window.innerWidth;
     let height = window.innerHeight * 0.5;
-    let particles = [];
-    let waveRibbons = [];
+    let particles: Particle[] = [];
+    let waveRibbons: WaveRibbon[] = [];
 
     // Initialize canvas size
     const initCanvas = () => {
@@ -28,7 +56,14 @@ const WaveBackground = () => {
     };
 
     // Particle class with wave motion
-    class Particle {
+    class ParticleClass implements Particle {
+      x: number = 0;
+      y: number = 0;
+      vx: number = 0;
+      size: number = 0;
+      life: number = 0;
+      opacity: number = 0;
+
       constructor() {
         this.reset();
       }
@@ -53,7 +88,7 @@ const WaveBackground = () => {
         if (this.y > height) this.y = 0;
       }
 
-      draw() {
+      draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
@@ -62,9 +97,18 @@ const WaveBackground = () => {
     }
 
     // Flowing ribbon wave class
-    class WaveRibbon {
-      constructor(baseYRatio, amplitude, speed, opacity, slope, thickness) {
-        this.baseYRatio = baseYRatio; // Store as ratio for responsive
+    class WaveRibbonClass implements WaveRibbon {
+      baseYRatio: number;
+      amplitude: number;
+      speed: number;
+      opacity: number;
+      slopeBase: number;
+      thickness: number;
+      offset: number;
+      secondaryOffset: number;
+
+      constructor(baseYRatio: number, amplitude: number, speed: number, opacity: number, slope: number, thickness: number) {
+        this.baseYRatio = baseYRatio;
         this.amplitude = amplitude;
         this.speed = speed;
         this.opacity = opacity;
@@ -79,11 +123,11 @@ const WaveBackground = () => {
         this.secondaryOffset += this.speed * 0.7;
       }
 
-      draw() {
+      draw(ctx: CanvasRenderingContext2D, width: number, height: number) {
         const baseY = height * this.baseYRatio;
         const slope = this.slopeBase;
-        const topPath = [];
-        const bottomPath = [];
+        const topPath: { x: number; y: number }[] = [];
+        const bottomPath: { x: number; y: number }[] = [];
 
         for (let x = -200; x <= width + 200; x += 3) {
           const angleOffset = (x - width / 2) * slope;
@@ -133,10 +177,9 @@ const WaveBackground = () => {
     // Create particles - count based on screen size
     const createParticles = () => {
       particles = [];
-      // More particles for larger screens (1 particle per 10000 pixels, min 50, max 200)
       const particleCount = Math.min(200, Math.max(50, Math.floor((width * height) / 10000)));
       for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
+        particles.push(new ParticleClass());
       }
     };
 
@@ -146,13 +189,13 @@ const WaveBackground = () => {
       const ribbonCount = 3;
       const baseSlope = -0.15;
       for (let i = 0; i < ribbonCount; i++) {
-        waveRibbons.push(new WaveRibbon(
-          0.55 + (i - 1) * 0.08,  // baseY as ratio - more concentrated
-          20 + i * 6,             // amplitude
-          0.008 + i * 0.005,      // speed
-          0.28 - i * 0.05,        // opacity
-          baseSlope - i * 0.018,  // slope
-          60 + i * 18             // thickness
+        waveRibbons.push(new WaveRibbonClass(
+          0.55 + (i - 1) * 0.08,
+          20 + i * 6,
+          0.008 + i * 0.005,
+          0.28 - i * 0.05,
+          baseSlope - i * 0.018,
+          60 + i * 18
         ));
       }
     };
@@ -183,12 +226,12 @@ const WaveBackground = () => {
 
       waveRibbons.forEach(ribbon => {
         ribbon.update();
-        ribbon.draw();
+        ribbon.draw(ctx, width, height);
       });
 
       particles.forEach(particle => {
         particle.update();
-        particle.draw();
+        particle.draw(ctx);
       });
 
       drawConnections();
@@ -197,7 +240,7 @@ const WaveBackground = () => {
     };
 
     // Handle resize with debounce
-    let resizeTimeout;
+    let resizeTimeout: NodeJS.Timeout;
     const handleResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
@@ -205,13 +248,10 @@ const WaveBackground = () => {
         const oldHeight = height;
         initCanvas();
         
-        // Scale particles proportionally to new dimensions
         particles.forEach(p => {
-          // Scale position proportionally
           p.x = (p.x / oldWidth) * width;
           p.y = (p.y / oldHeight) * height;
           
-          // Add some randomness to fill gaps on larger screens
           if (width > oldWidth) {
             p.x += (Math.random() - 0.5) * (width - oldWidth) * 0.5;
           }
@@ -219,15 +259,13 @@ const WaveBackground = () => {
             p.y += (Math.random() - 0.5) * (height - oldHeight) * 0.5;
           }
           
-          // Keep within bounds
           p.x = Math.max(0, Math.min(p.x, width));
           p.y = Math.max(0, Math.min(p.y, height));
         });
 
-        // Add extra particles if screen got much bigger
         const targetCount = Math.floor((width * height) / 10000);
         while (particles.length < targetCount && particles.length < 200) {
-          particles.push(new Particle());
+          particles.push(new ParticleClass());
         }
       }, 100);
     };
