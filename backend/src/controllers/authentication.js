@@ -219,8 +219,146 @@ const getProfile = async (req, res) => {
     }
 }
 
+// update user profile
+const updateProfile = async(req, res) => {
+    try{
+        const userId = req.user.userId;
+        const role = req.user.role;
+        const { firstName, lastName, email, studentMatrixNumber } = req.body;
+    
+        if(!firstName || !lastName || !email){
+            return res.status(400).json({
+                error: true,
+                message: 'First name, last name, and email are required'
+            });
+        }
+
+        // Call appropriate stored procedure based on role
+        let result;
+        switch(role){
+            case 'student':
+                if(!studentMatrixNumber){
+                     return res.status(400).json({
+                        error: true,
+                        message: 'Student matrix number is required for student accounts'
+                    });
+                }
+                result = await executeStoredProcedure('p_update_student_profile', [
+                    userId, firstName, lastName, email, studentMatrixNumber
+                ]);
+                break;
+            case 'teacher':
+                result = await executeStoredProcedure('p_update_teacher_profile', [
+                    userId, firstName, lastName, email
+                ]);
+                break;
+            case 'itstaff':
+                 result = await executeStoredProcedure('p_update_user_profile', [
+                    userId, firstName, lastName, email
+                ]);
+                break;
+
+        }
+
+        console.log(`✅ Profile updated for user: ${userId}`);
+
+         res.json({
+            success: true,
+            message: 'Profile updated successfully',
+            user: {
+                userId,
+                firstName,
+                lastName,
+                email,
+                role,
+                ...(role === 'student' && { studentMatrixNumber })
+            }
+        });
+    }catch (error) {
+        console.error('Profile update error:', error);
+        
+        // Handle duplicate email error
+        if (error.message.includes('Duplicate entry') || error.code === 'ER_DUP_ENTRY') {
+            return res.status(409).json({
+                error: true,
+                message: 'Email address already exists'
+            });
+        }
+
+        res.status(500).json({
+            error: true,
+            message: 'Profile update failed',
+            details: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+        });
+    }
+}
+
+// Update password
+const updatePassword = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { currentPassword, newPassword } = req.body;
+
+        // Validate required fields
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({
+                error: true,
+                message: 'Current password and new password are required'
+            });
+        }
+
+        // Get current user data to verify current password
+        const users = await executeQuery(
+            'SELECT password_hash FROM schedule_management.user WHERE user_id = ?',
+            [userId]
+        );
+
+        if (!users || users.length === 0) {
+            return res.status(404).json({
+                error: true,
+                message: 'User not found'
+            });
+        }
+
+        const user = Array.isArray(users) ? users[0] : users;
+
+        // Verify current password
+        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password_hash);
+        if (!isCurrentPasswordValid) {
+            return res.status(401).json({
+                error: true,
+                message: 'Current password is incorrect'
+            });
+        }
+
+        // Hash new password
+        const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
+        const newPasswordHash = await bcrypt.hash(newPassword, saltRounds);
+
+        // Update password
+        await executeStoredProcedure('p_update_user_password', [userId, newPasswordHash]);
+
+        console.log(`✅ Password updated for user: ${userId}`);
+
+        res.json({
+            success: true,
+            message: 'Password updated successfully'
+        });
+
+    } catch (error) {
+        console.error('Password update error:', error);
+        res.status(500).json({
+            error: true,
+            message: 'Password update failed',
+            details: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+        });
+    }
+}
+
 module.exports = {
     register,
     login,
-    getProfile
+    getProfile,
+    updateProfile,
+    updatePassword
 };

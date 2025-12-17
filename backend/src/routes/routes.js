@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login, getProfile } = require('../controllers/authentication');
+const { register, login, getProfile, updateProfile, updatePassword } = require('../controllers/authentication');
 const { authenticateToken } = require('../utils/jwt');
 
 const router = express.Router();
@@ -10,6 +10,9 @@ router.post('/login', login);
 
 // Protected routes (authentication required)
 router.get('/profile', authenticateToken, getProfile);
+router.put('/profile', authenticateToken, updateProfile);
+router.put('/password', authenticateToken, updatePassword);
+
 
 // Test route to verify auth is working
 router.get('/test-auth', authenticateToken, (req, res) => {
