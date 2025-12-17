@@ -32,20 +32,20 @@ Create REST API endpoints to connect the existing React frontend authentication 
 ## 🗄️ **Phase 2: Database Integration**
 
 ### 2.1 Database Connection Setup
-- [ ] Create MySQL connection pool
-- [ ] Test database connectivity
-- [ ] Add connection error handling
-- [ ] Set up database query utilities
+- [X] Create MySQL connection pool
+- [X] Test database connectivity
+- [X] Add connection error handling
+- [X] Set up database query utilities
 
 ### 2.2 SQL Procedures Integration
-- [ ] **Student Registration**: Connect to `procedure_create_student_account.sql`
-- [ ] **Teacher Registration**: Connect to `procedure_create_teacher_account.sql`
-- [ ] **Admin Registration**: Connect to `procedure_create_it_account.sql`
-- [ ] **User Profile Retrieval**: 
-  - [ ] `p_view_student_account_by_id.sql`
-  - [ ] `p_view_teacher_account_by_id.sql`
-  - [ ] `p_view_itstaff_by_id.sql`
-- [ ] **User Authentication**: Query existing user tables for login validation
+- [X] **Student Registration**: Connect to `procedure_create_student_account.sql`
+- [X] **Teacher Registration**: Connect to `procedure_create_teacher_account.sql`
+- [X] **Admin Registration**: Connect to `procedure_create_it_account.sql`
+- [X] **User Profile Retrieval**: 
+  - [X] `p_view_student_account_by_id.sql`
+  - [X] `p_view_teacher_account_by_id.sql`
+  - [X] `p_view_itstaff_by_id.sql`
+- [X] **User Authentication**: Query existing user tables for login validation
 
 ---
 
@@ -55,16 +55,16 @@ Create REST API endpoints to connect the existing React frontend authentication 
 **Endpoint**: `POST /api/auth/register`
 
 **Tasks**:
-- [ ] Create registration controller
-- [ ] Add input validation (email, password, role, etc.)
-- [ ] Hash passwords using bcrypt
-- [ ] Call appropriate SQL procedure based on role:
-  - [ ] Student → `procedure_create_student_account.sql`
-  - [ ] Teacher → `procedure_create_teacher_account.sql` 
-  - [ ] Admin → `procedure_create_it_account.sql` (restricted)
-- [ ] Handle duplicate email validation
-- [ ] Return appropriate success/error responses
-- [ ] Add registration validation rules
+- [X] Create registration controller
+- [X] Add input validation (email, password, role, etc.)
+- [X] Hash passwords using bcrypt
+- [X] Call appropriate SQL procedure based on role:
+  - [X] Student → `procedure_create_student_account.sql`
+  - [X] Teacher → `procedure_create_teacher_account.sql` 
+  - [X] Admin → `procedure_create_it_account.sql` (restricted)
+- [X] Handle duplicate email validation
+- [X] Return appropriate success/error responses
+- [X] Add registration validation rules
 
 **Expected Request Body**:
 ```json
@@ -82,14 +82,14 @@ Create REST API endpoints to connect the existing React frontend authentication 
 **Endpoint**: `POST /api/auth/login`
 
 **Tasks**:
-- [ ] Create login controller
-- [ ] Validate email and password format
-- [ ] Query database for user credentials
-- [ ] Compare hashed passwords using bcrypt
-- [ ] Generate JWT tokens upon successful login
-- [ ] Handle "Remember Me" functionality (longer token expiry)
-- [ ] Return user profile data and role
-- [ ] Add login attempt rate limiting
+- [X] Create login controller
+- [X] Validate email and password format
+- [X] Query database for user credentials
+- [X] Compare hashed passwords using bcrypt
+- [X] Generate JWT tokens upon successful login
+- [X] Handle "Remember Me" functionality (longer token expiry)
+- [X] Return user profile data and role
+- [X] Add login attempt rate limiting
 
 **Expected Request Body**:
 ```json
@@ -120,23 +120,23 @@ Create REST API endpoints to connect the existing React frontend authentication 
 **Endpoint**: `GET /api/auth/me`
 
 **Tasks**:
-- [ ] Create JWT authentication middleware
-- [ ] Extract user ID from JWT token
-- [ ] Call appropriate view procedure based on user role:
-  - [ ] Student → `p_view_student_account_by_id.sql`
-  - [ ] Teacher → `p_view_teacher_account_by_id.sql`
-  - [ ] Admin → `p_view_itstaff_by_id.sql`
-- [ ] Return current user profile data
-- [ ] Handle invalid/expired tokens
+- [X] Create JWT authentication middleware
+- [X] Extract user ID from JWT token
+- [X] Call appropriate view procedure based on user role:
+  - [X] Student → `p_view_student_account_by_id.sql`
+  - [X] Teacher → `p_view_teacher_account_by_id.sql`
+  - [X] Admin → `p_view_itstaff_by_id.sql`
+- [X] Return current user profile data
+- [X] Handle invalid/expired tokens
 
 ### 3.4 User Logout API
 **Endpoint**: `POST /api/auth/logout`
 
 **Tasks**:
-- [ ] Create logout controller
-- [ ] Implement token blacklisting (optional)
-- [ ] Clear any server-side session data
-- [ ] Return success response
+- [X] Create logout controller
+- [X] Implement token blacklisting (optional)
+- [X] Clear any server-side session data
+- [X] Return success response
 
 ---
 
