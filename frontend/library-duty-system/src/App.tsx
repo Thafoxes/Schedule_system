@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './App.css';
 import WaveBackground from './WaveBackground';
+import authService from './services/authService';
+import { LoginRequest, RegisterRequest } from './services/authService';
+
 
 // TypeScript interfaces
 interface InputWithIconProps {
@@ -8,8 +11,8 @@ interface InputWithIconProps {
   name: string;
   placeholder: string;
   icon: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
 }
 
@@ -24,38 +27,43 @@ interface FormData {
 type Role = 'student' | 'teacher' | 'admin';
 
 // Reusable Input Component with Icon
-const InputWithIcon: React.FC<InputWithIconProps> = ({ 
+const InputWithIcon: React.memo<InputWithIconProps> = ({ 
   type, name, placeholder, icon, value, onChange, required = false 
 }) => {
+  const inputProps: any = {
+    type,
+    name,
+    placeholder,
+    required,
+    className: "form-input"
+  };
+
+  // Only add value and onChange if value is provided (controlled)
+  if (value !== undefined) {
+    inputProps.value = value;
+    inputProps.onChange = onChange;
+  }
+
   return (
     <div className="input-group">
       <div className="input-icon">
         <i className={`bi bi-${icon}`}></i>
       </div>
-      <input
-        type={type}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        required={required}
-        className="form-input"
-      />
+      <input {...inputProps} />
     </div>
   );
 };
 
 function App() {
+
   const [selectedRole, setSelectedRole] = useState<Role>('student');
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
   const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
-  const [formData, setFormData] = useState<FormData>({
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    studentId: ''
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+
 
   const roleColors = {
     student: 'radial-gradient(ellipse at center, #1a5c1a 0%, #0d3d0d 50%, #051a05 100%)',
@@ -69,44 +77,122 @@ function App() {
     setIsForgotPassword(false);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isSignUp) {
-      console.log('Sign Up Data:', formData);
-      alert(`Student Sign Up Successful!\nName: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}`);
-    } else {
-      console.log('Login Data:', { role: selectedRole, ...formData });
-      alert(`Login as ${selectedRole.toUpperCase()}\nEmail: ${formData.email}`);
+    e.stopPropagation();
+    
+    console.log('Form submit triggered');
+    
+    setIsLoading(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    
+    // Get form data directly from the form
+    const form = e.currentTarget;
+    const formDataObj = new FormData(form);
+    
+    const email = formDataObj.get('email') as string;
+    const password = formDataObj.get('password') as string;
+    const firstName = formDataObj.get('firstName') as string;
+    const lastName = formDataObj.get('lastName') as string;
+    const studentId = formDataObj.get('studentId') as string;
+    
+    try {
+      if (!isSignUp) {
+        // Login
+        console.log('Attempting login for role:', selectedRole);
+        const loginData: LoginRequest = {
+          email,
+          password,
+          role: selectedRole
+        };
+
+        const response = await authService.login(loginData);
+        console.log('Login successful:', response.user);
+        
+        setSuccessMessage(`Welcome back, ${response.user.firstName}!`);
+        
+        // Clear form on success
+        form.reset();
+        
+      } else {
+        // Register
+        console.log('Attempting registration for role:', selectedRole);
+        const registerData: RegisterRequest = {
+          email,
+          firstName,
+          lastName,
+          password,
+          role: selectedRole,
+          ...(selectedRole === 'student' && { studentMatrixNumber: studentId })
+        };
+
+        const response = await authService.register(registerData);
+        console.log('Registration successful:', response);
+        
+        setSuccessMessage('Account created successfully! Please log in.');
+        
+        // Clear form and switch to login mode
+        form.reset();
+        setIsSignUp(false);
+      }
+    } catch (error: any) {
+      console.error('Authentication error caught in handleSubmit:', error);
+      
+      // Prevent any navigation by stopping event propagation again
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Handle different types of errors
+      if (error.response?.status === 401) {
+        console.log('401 Unauthorized error - setting error message');
+        setErrorMessage('Invalid email or password. Please try again.');
+      } else if (error.response?.status === 400) {
+        console.log('400 Bad Request error:', error.response.data);
+        setErrorMessage(error.response.data?.message || 'Invalid request. Please check your information.');
+      } else if (error.response?.data?.message) {
+        console.log('API error message:', error.response.data.message);
+        setErrorMessage(error.response.data.message);
+      } else if (error.message) {
+        console.log('Error message:', error.message);
+        setErrorMessage(error.message);
+      } else {
+        console.log('Unknown error:', error);
+        setErrorMessage('An unexpected error occurred. Please try again.');
+      }
+      
+      // Force component to stay on current page
+      return false;
+    } finally {
+      setIsLoading(false);
+      console.log('Form submission completed');
     }
-    // Reset form
-    setFormData({ email: '', password: '', firstName: '', lastName: '', studentId: '' });
   };
 
   const handleForgotPassword = () => {
     setIsForgotPassword(true);
-    setFormData({ email: '', password: '', firstName: '', lastName: '', studentId: '' });
+    setErrorMessage('');
+    setSuccessMessage('');
   };
 
   const handleForgotPasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formData.email) {
-      alert(`Password reset link has been sent to:\n${formData.email}\n\nPlease check your inbox.`);
+    const form = e.currentTarget;
+    const formDataObj = new FormData(form);
+    const email = formDataObj.get('email') as string;
+    
+    if (email) {
+      alert(`Password reset link has been sent to:\n${email}\n\nPlease check your inbox.`);
       setIsForgotPassword(false);
-      setFormData({ email: '', password: '', firstName: '', lastName: '', studentId: '' });
+      form.reset();
     }
   };
 
   const handleBackToLogin = () => {
     setIsForgotPassword(false);
     setIsSignUp(false);
-    setFormData({ email: '', password: '', firstName: '', lastName: '', studentId: '' });
+    setErrorMessage('');
+    setSuccessMessage('');
   };
 
   return (
@@ -186,8 +272,7 @@ function App() {
                       name="email"
                       placeholder="Enter your email"
                       icon="envelope"
-                      value={formData.email}
-                      onChange={handleInputChange}
+
                       required
                     />
                   </div>
@@ -195,6 +280,7 @@ function App() {
                   <button 
                     type="submit" 
                     className="submit-btn"
+                   
                     style={{ background: roleColors[selectedRole] }}
                   >
                     Send Reset Link
@@ -220,6 +306,46 @@ function App() {
                   {isSignUp ? 'Student Sign Up' : `${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} Login`}
                 </h2>
                 
+                {errorMessage && (
+                  <div className="error-message" style={{
+                    background: 'linear-gradient(135deg, rgba(255, 82, 82, 0.15), rgba(255, 107, 107, 0.08))',
+                    border: '1px solid rgba(255, 107, 107, 0.4)',
+                    borderLeft: '4px solid #ff6b6b',
+                    color: '#ff4757',
+                    padding: '12px 16px',
+                    borderRadius: '10px',
+                    marginBottom: '20px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    boxShadow: '0 4px 12px rgba(255, 107, 107, 0.1)',
+                    animation: 'slideIn 0.3s ease-out'
+                  }}>
+                    <i className="bi bi-exclamation-triangle-fill" style={{ marginRight: '8px' }}></i>
+                    {errorMessage}
+                  </div>
+                )}
+
+                {successMessage && (
+                  <div className="success-message" style={{
+                    background: 'linear-gradient(135deg, rgba(46, 213, 115, 0.15), rgba(123, 237, 159, 0.08))',
+                    border: '1px solid rgba(46, 213, 115, 0.4)',
+                    borderLeft: '4px solid #2ed573',
+                    color: '#27ae60',
+                    padding: '16px 20px',
+                    borderRadius: '12px',
+                    marginBottom: '20px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    textAlign: 'center',
+                    boxShadow: '0 6px 20px rgba(46, 213, 115, 0.15)',
+                    animation: 'slideIn 0.4s ease-out',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <i className="bi bi-check-circle-fill" style={{ marginRight: '10px', fontSize: '18px' }}></i>
+                    {successMessage}
+                  </div>
+                )}
                 <form onSubmit={handleSubmit}>
                   {isSignUp && (
                     <>
@@ -231,8 +357,7 @@ function App() {
                             name="firstName"
                             placeholder="John"
                             icon="person"
-                            value={formData.firstName}
-                            onChange={handleInputChange}
+
                             required
                           />
                         </div>
@@ -243,8 +368,7 @@ function App() {
                             name="lastName"
                             placeholder="Doe"
                             icon="person-badge"
-                            value={formData.lastName}
-                            onChange={handleInputChange}
+
                             required
                           />
                         </div>
@@ -256,8 +380,7 @@ function App() {
                           name="studentId"
                           placeholder="Enter your student ID"
                           icon="card-text"
-                          value={formData.studentId}
-                          onChange={handleInputChange}
+
                           required
                         />
                       </div>
@@ -271,8 +394,6 @@ function App() {
                       name="email"
                       placeholder="Enter your email"
                       icon="envelope"
-                      value={formData.email}
-                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -284,8 +405,6 @@ function App() {
                       name="password"
                       placeholder="Enter your password"
                       icon="lock"
-                      value={formData.password}
-                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -293,9 +412,10 @@ function App() {
                   <button 
                     type="submit" 
                     className="submit-btn"
+                    disabled={isLoading}
                     style={{ background: roleColors[selectedRole] }}
                   >
-                    {isSignUp ? 'Sign Up' : 'Login'}
+                    {isLoading ? 'Loading...' : (isSignUp ? 'Sign Up' : 'Login')} 
                   </button>
                 </form>
 
