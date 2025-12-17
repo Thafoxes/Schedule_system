@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { testConnection, executeStoredProcedure, executeQuery, closePool } = require('./src/config/database');
+const {testConnection, closePool} = requires('./src/config/database');
 require('dotenv').config();
 
 const app = express();
