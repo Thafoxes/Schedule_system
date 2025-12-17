@@ -45,7 +45,7 @@ const register = async (req, res) => {
         switch (role) {
             case 'student':
                 result = await executeStoredProcedure('create_student_account', [
-                    email, firstName, lastName, passwordHash, studentMatrixNumber
+                    email, firstName, lastName, passwordHash, studentMatricNumber
                 ]);
                 break;
             case 'teacher':
@@ -105,11 +105,17 @@ const login = async (req, res) => {
             });
         }
 
+        console.log(`🔍 Login attempt: ${email} as ${role}`);
+
         // Get user by email and role
-        const [users] = await executeQuery(
+        const users = await executeQuery(
             'SELECT user_id, email, first_name, last_name, role, password_hash FROM schedule_management.user WHERE email = ? AND role = ?',
             [email, role]
         );
+
+        console.log('🔍 Query result:', users);
+        console.log('🔍 Users array length:', users.length);
+        console.log('🔍 First user object:', users[0]);
 
         if(users.length === 0){
             return res.status(401).json({
@@ -145,7 +151,7 @@ const login = async (req, res) => {
                 [user.user_id]
             );
             if (studentData.length > 0) {
-                userDetails.studentMatrixNumber = studentData[0].student_matrix_number;
+                userDetails.studentMatricNumber = studentData[0].student_matrix_number;
             }
         }
 
@@ -170,6 +176,7 @@ const login = async (req, res) => {
         });     
     }
 }
+
 
 // Get current user profile
 const getProfile = async (req, res) => {

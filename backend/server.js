@@ -3,8 +3,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { testConnection, executeStoredProcedure, executeQuery, closePool } = require('./src/config/database');
-const {testConnection, closePool} = requires('./src/config/database');
 require('dotenv').config();
+
+const authRoutes = require('./src/routes/routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -55,6 +56,10 @@ if (process.env.NODE_ENV === 'development') {
         next();
     });
 }
+
+// API Routes
+app.use('/api/auth', authRoutes);
+
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -145,7 +150,10 @@ app.use( (req, res) => {
         availableRoutes: [
             'GET /api/health',
             'GET /api/test-db',
-            'GET /api/test-procedures'
+            'GET /api/test-procedures',
+            'POST /api/auth/register',
+            'POST /api/auth/login',
+            'GET /api/auth/profile'
         ]
     });
 });
