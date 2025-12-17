@@ -124,7 +124,7 @@ function App() {
           lastName,
           password,
           role: selectedRole,
-          ...(selectedRole === 'student' && { studentMatrixNumber: studentId })
+          ...(selectedRole === 'student' && { studentMatricNumber: studentId })
         };
 
         const response = await authService.register(registerData);
@@ -374,13 +374,12 @@ function App() {
                         </div>
                       </div>
                       <div className="form-group">
-                        <label htmlFor="studentId">Student ID</label>
+                        <label htmlFor="studentId">Student Metric Number</label>
                         <InputWithIcon
                           type="text"
                           name="studentId"
-                          placeholder="Enter your student ID"
+                          placeholder="Enter your student matric number"
                           icon="card-text"
-
                           required
                         />
                       </div>

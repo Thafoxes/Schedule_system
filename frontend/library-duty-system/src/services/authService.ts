@@ -12,7 +12,7 @@ export interface RegisterRequest {
   lastName: string;
   password: string;
   role: 'student' | 'teacher' | 'itstaff';
-  studentMatrixNumber?: string;
+  studentMatricNumber?: string;
 }
 
 
@@ -20,7 +20,7 @@ export interface UpdateProfileRequest {
   firstName: string;
   lastName: string;
   email: string;
-  studentMatrixNumber?: string;
+  studentMatricNumber?: string;
 }
 
 
