@@ -437,7 +437,6 @@
 
 .form-group input {
   width: 100%;
-  padding: 9px 12px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 14px;
@@ -465,6 +464,83 @@
 .admin-theme .form-group input:focus {
   border-color: #1a5a5e;
   box-shadow: 0 0 0 3px rgba(26, 90, 94, 0.15);
+}
+
+/* Bootstrap Icons Input Styling */
+.input-group {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+
+.form-input {
+  width: 100%;
+  padding: 9px 12px 9px 35px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+  box-sizing: border-box;
+  background: white;
+}
+
+.input-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  z-index: 2;
+  pointer-events: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-input::placeholder {
+  color: #aaa;
+}
+
+.form-input:focus {
+  border-color: #4A90E2;
+}
+
+.form-input:focus + .input-icon,
+.input-group:focus-within .input-icon {
+  color: #4A90E2;
+}
+
+/* Role-specific focus colors for icon inputs */
+.student-theme .form-input:focus {
+  border-color: #2d5a3d;
+  box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.15);
+}
+
+.student-theme .input-group:focus-within .input-icon {
+  color: #2d5a3d;
+}
+
+.teacher-theme .form-input:focus {
+  border-color: #8B2942;
+  box-shadow: 0 0 0 3px rgba(139, 41, 66, 0.15);
+}
+
+.teacher-theme .input-group:focus-within .input-icon {
+  color: #8B2942;
+}
+
+.admin-theme .form-input:focus {
+  border-color: #1a5a5e;
+  box-shadow: 0 0 0 3px rgba(26, 90, 94, 0.15);
+}
+
+.admin-theme .input-group:focus-within .input-icon {
+  color: #1a5a5e;
 }
 
 .submit-btn {

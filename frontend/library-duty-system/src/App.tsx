@@ -2,11 +2,54 @@ import React, { useState } from 'react';
 import './App.css';
 import WaveBackground from './WaveBackground';
 
+// TypeScript interfaces
+interface InputWithIconProps {
+  type: string;
+  name: string;
+  placeholder: string;
+  icon: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+}
+
+interface FormData {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  studentId: string;
+}
+
+type Role = 'student' | 'teacher' | 'admin';
+
+// Reusable Input Component with Icon
+const InputWithIcon: React.FC<InputWithIconProps> = ({ 
+  type, name, placeholder, icon, value, onChange, required = false 
+}) => {
+  return (
+    <div className="input-group">
+      <div className="input-icon">
+        <i className={`bi bi-${icon}`}></i>
+      </div>
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        required={required}
+        className="form-input"
+      />
+    </div>
+  );
+};
+
 function App() {
-  const [selectedRole, setSelectedRole] = useState('student');
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [selectedRole, setSelectedRole] = useState<Role>('student');
+  const [isSignUp, setIsSignUp] = useState<boolean>(false);
+  const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
+  const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
     firstName: '',
@@ -20,20 +63,20 @@ function App() {
     admin: 'radial-gradient(ellipse at center, #1a4d5c 0%, #0d2d3d 50%, #05141a 100%)'
   };
 
-  const handleRoleChange = (role) => {
+  const handleRoleChange = (role: Role) => {
     setSelectedRole(role);
     setIsSignUp(false);
     setIsForgotPassword(false);
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSignUp) {
       console.log('Sign Up Data:', formData);
@@ -51,7 +94,7 @@ function App() {
     setFormData({ email: '', password: '', firstName: '', lastName: '', studentId: '' });
   };
 
-  const handleForgotPasswordSubmit = (e) => {
+  const handleForgotPasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.email) {
       alert(`Password reset link has been sent to:\n${formData.email}\n\nPlease check your inbox.`);
@@ -138,13 +181,13 @@ function App() {
                 <form onSubmit={handleForgotPasswordSubmit}>
                   <div className="form-group">
                     <label htmlFor="email">Email</label>
-                    <input
+                    <InputWithIcon
                       type="email"
-                      id="email"
                       name="email"
+                      placeholder="Enter your email"
+                      icon="envelope"
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="Enter your email"
                       required
                     />
                   </div>
@@ -183,38 +226,38 @@ function App() {
                       <div className="name-row">
                         <div className="form-group">
                           <label htmlFor="firstName">First Name</label>
-                          <input
+                          <InputWithIcon
                             type="text"
-                            id="firstName"
                             name="firstName"
+                            placeholder="John"
+                            icon="person"
                             value={formData.firstName}
                             onChange={handleInputChange}
-                            placeholder="John"
                             required
                           />
                         </div>
                         <div className="form-group">
                           <label htmlFor="lastName">Last Name</label>
-                          <input
+                          <InputWithIcon
                             type="text"
-                            id="lastName"
                             name="lastName"
+                            placeholder="Doe"
+                            icon="person-badge"
                             value={formData.lastName}
                             onChange={handleInputChange}
-                            placeholder="Doe"
                             required
                           />
                         </div>
                       </div>
                       <div className="form-group">
                         <label htmlFor="studentId">Student ID</label>
-                        <input
+                        <InputWithIcon
                           type="text"
-                          id="studentId"
                           name="studentId"
+                          placeholder="Enter your student ID"
+                          icon="card-text"
                           value={formData.studentId}
                           onChange={handleInputChange}
-                          placeholder="Enter your student ID"
                           required
                         />
                       </div>
@@ -223,26 +266,26 @@ function App() {
                   
                   <div className="form-group">
                     <label htmlFor="email">Email</label>
-                    <input
+                    <InputWithIcon
                       type="email"
-                      id="email"
                       name="email"
+                      placeholder="Enter your email"
+                      icon="envelope"
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="Enter your email"
                       required
                     />
                   </div>
                   
                   <div className="form-group">
                     <label htmlFor="password">Password</label>
-                    <input
+                    <InputWithIcon
                       type="password"
-                      id="password"
                       name="password"
+                      placeholder="Enter your password"
+                      icon="lock"
                       value={formData.password}
                       onChange={handleInputChange}
-                      placeholder="Enter your password"
                       required
                     />
                   </div>
